@@ -1,0 +1,12 @@
+{
+  "id" : "a39f14f0e6da431fb5cb36c3803f16d8",
+  "name" : "Kafka",
+  "type" : "kafka",
+  "properties" : {
+    "brokers" : "base1-01.lab01.pvc-ds-bc.athens.cloudera.com:9093,base2-01.lab01.pvc-ds-bc.athens.cloudera.com:9093",
+    "protocol" : "sasl",
+    "mechanism" : "KERBEROS",
+    "ssl.truststore.location" : "/opt/cloudera/security/pki/truststore.jks"
+  },
+  "custom_truststore" : false
+}
