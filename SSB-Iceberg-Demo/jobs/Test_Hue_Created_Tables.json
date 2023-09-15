@@ -1,6 +1,7 @@
 {
   "job_name" : "Test_Hue_Created_Tables",
   "api_endpoints" : [ ],
+  "sql" : "SELECT * FROM `Hive`.`test_db`.`iceberg_hive_table2`;",
   "mv_config" : {
     "name" : "Test_Hue_Created_Tables",
     "retention" : 300,
