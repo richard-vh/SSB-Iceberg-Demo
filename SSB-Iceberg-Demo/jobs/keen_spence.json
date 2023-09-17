@@ -1,9 +1,8 @@
 {
-  "job_name" : "Test_Hue_Created_Tables",
+  "job_name" : "keen_spence",
   "api_endpoints" : [ ],
-  "sql" : "SELECT * FROM `Hive`.`test_db`.`iceberg_hive_table2`;",
   "mv_config" : {
-    "name" : "Test_Hue_Created_Tables",
+    "name" : "keen_spence",
     "retention" : 300,
     "min_row_retention_count" : 0,
     "recreate" : false,
