@@ -1,9 +1,9 @@
 {
-  "job_name" : "Airports_Kafka",
+  "job_name" : "Routes_Kafka",
   "api_endpoints" : [ ],
-  "sql" : "\n-- this works\nSELECT * FROM airports_kafka;\n-- this works\nDROP TABLE IF EXISTS `ssb`.`ssb_default`.`airports_kafka_iceberg`;\nCREATE TABLE `ssb`.`ssb_default`.`airports_kafka_iceberg` (\n  `city_code` VARCHAR(2147483647),\n  `country_code` VARCHAR(2147483647),\n  `name_translations` ROW<`en` VARCHAR(2147483647)>,\n  `time_zone` VARCHAR(2147483647),\n  `flightable` BOOLEAN,\n  `coordinates` ROW<`lat` DOUBLE, `lon` DOUBLE>,\n  `name` VARCHAR(2147483647),\n  `code` VARCHAR(2147483647),\n  `iata_type` VARCHAR(2147483647),\n  `eventTimestamp` TIMESTAMP(3)\n) WITH \n( 'connector' = 'iceberg', 'catalog-database' = 'default', 'catalog-type' = 'hive', 'catalog-name' = 'Hive', 'engine.hive.enabled' = 'true');\n-- this doesnt work \n-- [ERROR] Job execution failed: Unable to create a sink for writing table 'ssb.ssb_default.airports_kafka_iceberg'.\n-- this works when eventTimestmap is just a timestamp - error caused by \n---Caused by: java.lang.UnsupportedOperationException: Creating table with computed columns is not supported yet.\nINSERT INTO `ssb`.`ssb_default`.airports_kafka_iceberg SELECT * FROM airports_kafka;\n\n-- this works\nSELECT * FROM `ssb`.`ssb_default`.airports_kafka_iceberg;",
+  "sql" : "-- This is the Kafka routes Topic\nSELECT * from routes;\n\n-- lets create the virtual table for iceberg routes with ssb\ndrop table if exists `ssb`.`ssb_default`.routes_ssb;\n-- this table is without paths to hive, so its virtual in top of explorer\nCREATE TABLE `ssb`.`ssb_default`.routes_ssb (\n  `airline_iata` VARCHAR(2147483647),\n  `airline_icao` VARCHAR(2147483647),\n  `departure_airport_iata` VARCHAR(2147483647),\n  `departure_airport_icao` VARCHAR(2147483647),\n  `arrival_airport_iata` VARCHAR(2147483647),\n  `arrival_airport_icao` VARCHAR(2147483647),\n  `codeshare` BOOLEAN,\n  `transfers` BIGINT,\n  `planes` ARRAY<VARCHAR(2147483647)>,\n  `eventTimestamp` TIMESTAMP(3) WITH LOCAL TIME ZONE METADATA FROM 'timestamp',\n  WATERMARK FOR `eventTimestamp` AS `eventTimestamp` - INTERVAL '3' SECOND\n) WITH (\n'connector' = 'iceberg',\n'catalog-database' = 'default',\n'catalog-type' = 'hive',\n'catalog-name' = 'Hive',\n'catalog-table' = 'routes_ssb',\n'ssb-hive-catalog' = 'Hive',\n'engine.hive.enabled' = 'true'\n);\n\n-- Now Insert all the Kafka routes into the iceberg table\nSET 'table.exec.iceberg.infer-source-parallelism.max' = '2';\nINSERT INTO `ssb`.`ssb_default`.routes_ssb \n    SELECT * FROM routes;",
   "mv_config" : {
-    "name" : "Airports_Kafka",
+    "name" : "Routes_Kafka",
     "retention" : 300,
     "min_row_retention_count" : 0,
     "recreate" : false,
@@ -20,7 +20,7 @@
   "runtime_config" : {
     "execution_mode" : "SESSION",
     "parallelism" : 1,
-    "sample_interval" : 0,
+    "sample_interval" : 1000,
     "sample_count" : 100,
     "window_size" : 100,
     "start_with_savepoint" : false,
