@@ -41,7 +41,7 @@
     }
   },
   "type" : "ssb",
-  "table_name" : "routes",
+  "table_name" : "routes_kafka",
   "transform_code_b64_encoded" : false,
   "transform_code" : ""
 }
