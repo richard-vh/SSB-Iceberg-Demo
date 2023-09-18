@@ -1,9 +1,9 @@
 {
-  "job_name" : "APIData_Routes_Kafka_To_ICEBERG",
+  "job_name" : "Test_Hue_Tables",
   "api_endpoints" : [ ],
-  "sql" : "-- This is the Kafka routes Topic\nSELECT * from routes;\n\n-- lets create the virtual table for iceberg routes with ssb\ndrop table if exists `ssb`.`ssb_default`.routes_ssb;\n-- this table is without paths to hive, so its virtual in top of explorer\nCREATE TABLE `ssb`.`ssb_default`.routes_ssb (\n  `airline_iata` VARCHAR(2147483647),\n  `airline_icao` VARCHAR(2147483647),\n  `departure_airport_iata` VARCHAR(2147483647),\n  `departure_airport_icao` VARCHAR(2147483647),\n  `arrival_airport_iata` VARCHAR(2147483647),\n  `arrival_airport_icao` VARCHAR(2147483647),\n  `codeshare` BOOLEAN,\n  `transfers` BIGINT,\n  `planes` ARRAY<VARCHAR(2147483647)>,\n  `eventTimestamp` TIMESTAMP(3) WITH LOCAL TIME ZONE METADATA FROM 'timestamp',\n  WATERMARK FOR `eventTimestamp` AS `eventTimestamp` - INTERVAL '3' SECOND\n) WITH (\n'connector' = 'iceberg',\n'catalog-database' = 'default',\n'catalog-type' = 'hive',\n'catalog-name' = 'Hive',\n'catalog-table' = 'routes_ssb',\n'ssb-hive-catalog' = 'Hive',\n'engine.hive.enabled' = 'true'\n);\n\n-- Now Insert all the Kafka routes into the iceberg table\nSET 'table.exec.iceberg.infer-source-parallelism.max' = '2';\nINSERT INTO `ssb`.`ssb_default`.routes_ssb \n    SELECT * FROM routes;",
+  "sql" : "-- test creating an iceberg connector to existing \n-- show create table jing_airlines.flights_iceberg;\nDROP TABLE IF EXISTS `ssb`.`ssb_default`.`flights_iceberg`;\n\nCREATE TABLE `ssb`.`ssb_default`.`flights_iceberg`(\n `month` int, dayofmonth int, \n dayofweek int, deptime int, crsdeptime int, arrtime int, \n crsarrtime int, uniquecarrier string, flightnum int, tailnum string, \n actualelapsedtime int, crselapsedtime int, airtime int, arrdelay int, \n depdelay int, origin string, dest string, distance int, taxiin int, \n taxiout int, cancelled int, cancellationcode string, diverted string, \n carrierdelay int, weatherdelay int, nasdelay int, securitydelay int, \n lateaircraftdelay int\n) WITH ( 'connector' = 'iceberg', 'catalog-database' = 'jing_airlines', 'catalog-type' = 'hive', 'catalog-name' = 'hive-catalog', 'engine.hive.enabled' = 'true');\n\nSET 'table.exec.iceberg.infer-source-parallelism.max' = '2';\nselect * FROM `ssb`.`ssb_default`.`flights_iceberg`;",
   "mv_config" : {
-    "name" : "APIData_Routes_Kafka_To_ICEBERG",
+    "name" : "Test_Hue_Tables",
     "retention" : 300,
     "min_row_retention_count" : 0,
     "recreate" : false,
