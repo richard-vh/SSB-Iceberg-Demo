@@ -1,7 +1,7 @@
 {
   "job_name" : "Countries_Kafka",
   "api_endpoints" : [ ],
-  "sql" : "\n-- untested\nSELECT * FROM countries_kafka;\n-- untested\nDROP TABLE IF EXISTS `ssb`.`ssb_default`.`countries_kafka_iceberg`;\nCREATE TABLE `ssb`.`ssb_default`.`countries_kafka_iceberg` (\n-- need schema here\n) WITH \n( 'connector' = 'iceberg', 'catalog-database' = 'default', 'catalog-type' = 'hive', 'catalog-name' = 'Hive', 'engine.hive.enabled' = 'true');\n-- untested\nINSERT INTO `ssb`.`ssb_default`.countries_kafka_iceberg SELECT * FROM countries_kafka;\n\n-- untested\nSELECT * FROM `ssb`.`ssb_default`.countries_kafka_iceberg;",
+  "sql" : "-- this works\nSELECT * FROM countries_kafka;\n-- this works\nDROP TABLE IF EXISTS `ssb`.`ssb_default`.`countries_kafka_iceberg`;\nCREATE TABLE `ssb`.`ssb_default`.`countries_kafka_iceberg` (\n  `name_translations` ROW<`en` VARCHAR(2147483647)>,\n  `cases` ROW<`su` VARCHAR(2147483647)>,\n  `code` VARCHAR(2147483647),\n  `name` VARCHAR(2147483647),\n  `currency` VARCHAR(2147483647),\n  `eventTimestamp` TIMESTAMP(3)\n) WITH \n( 'connector' = 'iceberg', 'catalog-database' = 'default', 'catalog-type' = 'hive', 'catalog-name' = 'Hive', 'engine.hive.enabled' = 'true');\n-- this works\nINSERT INTO `ssb`.`ssb_default`.countries_kafka_iceberg SELECT * FROM countries_kafka;\n\n-- this works\nSELECT * FROM `ssb`.`ssb_default`.countries_kafka_iceberg;",
   "mv_config" : {
     "name" : "Countries_Kafka",
     "retention" : 300,
