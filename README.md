@@ -21,6 +21,7 @@ hue dll create
 4. Check out Source Control.  If you created vs import on first screen you may have to press import here still.
 5. Inspect/Add Data Sources
 6. Inspect/Add Virtual Kafka Tables
+7. Create an activate an Environment variable userid with your <user-id>
 
 ***
 
