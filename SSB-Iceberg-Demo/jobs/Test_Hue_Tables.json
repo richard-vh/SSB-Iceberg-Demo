@@ -1,7 +1,7 @@
 {
   "job_name" : "Test_Hue_Tables",
   "api_endpoints" : [ ],
-  "sql" : "-- test creating an iceberg connector to existing \n-- show create table jing_airlines.flights_iceberg;\nDROP TABLE IF EXISTS `ssb`.`ssb_default`.`flights_iceberg`;\n\nCREATE TABLE `ssb`.`ssb_default`.`flights_iceberg`(\n `month` int, dayofmonth int, \n dayofweek int, deptime int, crsdeptime int, arrtime int, \n crsarrtime int, uniquecarrier string, flightnum int, tailnum string, \n actualelapsedtime int, crselapsedtime int, airtime int, arrdelay int, \n depdelay int, origin string, dest string, distance int, taxiin int, \n taxiout int, cancelled int, cancellationcode string, diverted string, \n carrierdelay int, weatherdelay int, nasdelay int, securitydelay int, \n lateaircraftdelay int\n) WITH ( 'connector' = 'iceberg', 'catalog-database' = 'jing_airlines', 'catalog-type' = 'hive', 'catalog-name' = 'hive-catalog', 'engine.hive.enabled' = 'true');\n\nSET 'table.exec.iceberg.infer-source-parallelism.max' = '2';\nselect * FROM `ssb`.`ssb_default`.`flights_iceberg`;",
+  "sql" : "-- First, create the ssb_default impala connector.\n-- DROP TABLE IF EXISTS `ssb`.`ssb_default`.`stevenmatison_flights_iceberg`;\nCREATE TABLE `ssb`.`ssb_default`.`stevenmatison_flights_iceberg`(\n `month` int, dayofmonth int, \n dayofweek int, deptime int, crsdeptime int, arrtime int, \n crsarrtime int, uniquecarrier string, flightnum int, tailnum string, \n actualelapsedtime int, crselapsedtime int, airtime int, arrdelay int, \n depdelay int, origin string, dest string, distance int, taxiin int, \n taxiout int, cancelled int, cancellationcode string, diverted string, \n carrierdelay int, weatherdelay int, nasdelay int, securitydelay int, \n lateaircraftdelay int\n) WITH ( 'connector' = 'iceberg', 'catalog-database' = '${ssb.env.userid}', 'catalog-type' = 'hive', 'catalog-name' = 'hive-catalog', 'engine.hive.enabled' = 'true');\n\n-- Second, execute select with some parallelism\nSET 'table.exec.iceberg.infer-source-parallelism.max' = '2';\nselect * FROM `ssb`.`ssb_default`.`stevenmatison_flights_iceberg`;",
   "mv_config" : {
     "name" : "Test_Hue_Tables",
     "retention" : 300,
@@ -20,7 +20,7 @@
   "runtime_config" : {
     "execution_mode" : "SESSION",
     "parallelism" : 1,
-    "sample_interval" : 1000,
+    "sample_interval" : 0,
     "sample_count" : 100,
     "window_size" : 100,
     "start_with_savepoint" : false,
