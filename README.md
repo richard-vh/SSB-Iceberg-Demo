@@ -76,6 +76,8 @@ CREATE TABLE ${user_id}_airlines.`countries_nifi_iceberg` (
 4. Test_Hue_Tables
 	* Confirm source iceberg table exists, check table names, and namespaces.
 
+Top Tip:  If you are using different topics w/ different schema, use SSB to get the DDL for topic.  Copy paste into the ssb job's create statement.  Just be careful with complicated schema such as array, struct, etc.
+
 ***
 
 ## Execution of Jobs:
