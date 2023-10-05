@@ -84,6 +84,12 @@ Top Tip:  If you are using different topics w/ different schema, use SSB to get 
 
 Warning: These are not full ssb jobs.  In these are samples you execute each statements one at a time.
 
+1. Execute the SELECT * FROM kafka_topic.  This will confirm that you have results in your kafka topic.  Be patient, if this is your first job may take some time (1-2 minutes) to report results.
+2. Execute the CREATE TABLE Statement.  This will create the virtual table in ssb_default name space.  It will not create the table in IMPALA.
+3. Execute the INSERT INTO SELECT.   Be Patient.  This will create the impala table and begin reporting results from the kafka topic shortly.
+4. Lastly, execute the final select.  These results are from IMPALA.
+
+
 ***
 
 ## Evaluating Results:
