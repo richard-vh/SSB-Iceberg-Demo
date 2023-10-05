@@ -56,12 +56,12 @@ CREATE TABLE ${user_id}_airlines.`countries_nifi_iceberg` (
 ## Getting Started
 
 1. Fork this repo and import your repo as a project in Sql Stream Builder
-2. Open your Project and have a look around at the left menu and explorer
+2. Open your Project and have a look around at the left menu. Notice all hover tags. Explore the vast detail in Explorer menus.
 3. Import Your Keytab
 4. Check out Source Control.  If you created vs import on first screen you may have to press import here still.  You can setup Authentication here.
-5. Inspect/Add Data Sources
-6. Inspect/Add Virtual Kafka Tables
-7. Create and activate an Environment with a key value pair for your userid -> username
+5. Create and activate an Environment with a key value pair for your userid -> username
+6. Inspect/Add Data Sources
+7. Inspect/Add Virtual Kafka Tables
 
 ***
 
