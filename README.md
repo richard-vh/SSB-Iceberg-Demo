@@ -3,11 +3,51 @@
 
 ## Prereqs:
 
-SSB Project requires 3 kafka topics, and 3 impala tables.
+SSB Project requires 3 kafka topics ingested via [this](https://github.com/cldr-steven-matison/NiFi-Templates/blob/main/SSBDemo.json) nifi flow, and 3 impala tables of the following schema.
 
 ```javascript
 
-hue dll create
+-- CREATE DATABASES
+-- EACH USER RUNS TO CREATE DATABASES
+CREATE DATABASE ${user_id}_airlines;
+
+--
+-- TABLES NEEDED FOR THE NIFI LAB
+DROP TABLE IF EXISTS ${user_id}_airlines.`routes_nifi_iceberg`;
+CREATE TABLE ${user_id}_airlines.`routes_nifi_iceberg` (
+  `airline_iata` VARCHAR,
+  `airline_icao` VARCHAR,
+  `departure_airport_iata` VARCHAR,
+  `departure_airport_icao` VARCHAR,
+  `arrival_airport_iata` VARCHAR,
+  `arrival_airport_icao` VARCHAR,
+  `codeshare` BOOLEAN,
+  `transfers` BIGINT,
+  `planes` ARRAY<VARCHAR>
+) STORED AS ICEBERG;
+
+DROP TABLE IF EXISTS ${user_id}_airlines.`airports_nifi_iceberg`;
+CREATE TABLE ${user_id}_airlines.`airports_nifi_iceberg` (
+  `city_code` VARCHAR,
+  `country_code` VARCHAR,
+  `name_translations` STRUCT<`en`:string>,
+  `time_zone` VARCHAR,
+  `flightable` BOOLEAN,
+  `coordinates` struct<`lat`:DOUBLE, `lon`:DOUBLE>,
+  `name` VARCHAR,
+  `code` VARCHAR,
+  `iata_type` VARCHAR
+) STORED AS ICEBERG;
+
+DROP TABLE IF EXISTS ${user_id}_airlines.`countries_nifi_iceberg`;
+CREATE TABLE ${user_id}_airlines.`countries_nifi_iceberg` (
+  `name_translations` STRUCT<`en`:VARCHAR>,
+  `cases` STRUCT<`su`:VARCHAR>,
+  `code` VARCHAR,
+  `name` VARCHAR,
+  `currency` VARCHAR
+) STORED AS ICEBERG;
+
 
 ```
 
@@ -18,10 +58,10 @@ hue dll create
 1. Fork this repo and import your repo as a project in Sql Stream Builder
 2. Open your Project and have a look around at the left menu and explorer
 3. Import Your Keytab
-4. Check out Source Control.  If you created vs import on first screen you may have to press import here still.
+4. Check out Source Control.  If you created vs import on first screen you may have to press import here still.  You can setup Authentication here.
 5. Inspect/Add Data Sources
 6. Inspect/Add Virtual Kafka Tables
-7. Create an activate an Environment variable userid with your username
+7. Create and activate an Environment with a key value pair for your userid -> username
 
 ***
 
@@ -48,6 +88,12 @@ Warning: These are not full ssb jobs.  In these are samples you execute each sta
 
 ```javascript
  
-hue dll select
+SELECT * FROM ${user_id}_airlines.`airports_nifi_iceberg`;
+SELECT * FROM ${user_id}_airlines.`countries_nifi_iceberg`;
+SELECT * FROM ${user_id}_airlines.`routes_nifi_iceberg`;
+
+SELECT * FROM ${user_id}_airlines.`airports_kafka_iceberg`;
+SELECT * FROM ${user_id}_airlines.`countries_kafka_iceberg`;
+SELECT * FROM ${user_id}_airlines.`routes_kafka_iceberg`;
 
 ```
