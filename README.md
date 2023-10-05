@@ -76,7 +76,7 @@ CREATE TABLE ${user_id}_airlines.`countries_nifi_iceberg` (
 4. Test_Hue_Tables
 	* Confirm source iceberg table exists, check table names, and namespaces.
 
-Top Tip:  If you are using different topics w/ different schema, use SSB to get the DDL for topic.  Copy paste into the ssb job's create statement.  Just be careful with complicated schema such as array, struct, etc.
+Top Tip:  If you are using different topics w/ different schema, use SSB to get the DDL for topic.  Copy paste into the ssb job's create statement.  Just be careful with complicated schema such as array, struct, etc.  If you are testing create and insert in iterations, you must increment all table names per test iteration.  Your previous interations will effect next iterations so stay in unique table names.
 
 ***
 
